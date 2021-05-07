@@ -8,6 +8,7 @@ For further reference, please consider the following sections:
 * [Create an OCI image](https://docs.spring.io/spring-boot/docs/2.4.5/gradle-plugin/reference/html/#build-image)
 * [Spring Security](https://docs.spring.io/spring-boot/docs/2.4.5/reference/htmlsingle/#boot-features-security)
 * [Spring Web](https://docs.spring.io/spring-boot/docs/2.4.5/reference/htmlsingle/#boot-features-developing-web-applications)
+* [OAuth2 Resource Server](https://docs.spring.io/spring-boot/docs/2.4.5/reference/htmlsingle/#boot-features-security-oauth2-server)
 
 ### Guides
 The following guides illustrate how to use some features concretely:
