@@ -1,4 +1,4 @@
-package CA.Splitr.controller;
+package CA.Splitr.Controllers;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import CA.Splitr.model.Expense;
+import CA.Splitr.Models.Expense;
 
 @RestController
 public class SplitrController {
