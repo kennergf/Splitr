@@ -34,7 +34,7 @@ public class TripRepository {
         return trip;
     }
 
-    public List<Expense> get(String label) {
+    public List<Expense> getExpenses(String label) {
         return trip.get(label);
     }
 
