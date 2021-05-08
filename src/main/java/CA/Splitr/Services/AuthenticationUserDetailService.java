@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 // REF https://javatodev.com/spring-boot-jwt-authentication/#d375a47b0c4f
 @Service
 public class AuthenticationUserDetailService implements UserDetailsService{
+
     private final UserService userService;
 
     public AuthenticationUserDetailService(UserService userService) {

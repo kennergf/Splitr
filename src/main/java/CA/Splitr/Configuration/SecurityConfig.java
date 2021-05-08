@@ -1,4 +1,4 @@
-package CA.Splitr.jwt;
+package CA.Splitr.Configuration;
 
 //import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.context.annotation.Bean;
@@ -16,15 +16,13 @@ import CA.Splitr.Services.AuthenticationUserDetailService;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    public SecurityConfig(BCryptPasswordEncoder bCryptPasswordEncoder,
-            AuthenticationUserDetailService authenticationUserDetailService) {
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    //private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final AuthenticationUserDetailService authenticationUserDetailService;
+
+    public SecurityConfig(AuthenticationUserDetailService authenticationUserDetailService) {
         this.authenticationUserDetailService = authenticationUserDetailService;
     }
 
-    private final AuthenticationUserDetailService authenticationUserDetailService;
-    
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors()
@@ -47,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception{
-        authenticationManagerBuilder.userDetailsService(authenticationUserDetailService).passwordEncoder(bCryptPasswordEncoder);
+        authenticationManagerBuilder.userDetailsService(authenticationUserDetailService).passwordEncoder(bCryptPasswordEncoder());
     }
 
     @Bean
