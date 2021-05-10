@@ -2,7 +2,6 @@ package CA.Splitr.Repositories;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
@@ -12,30 +11,38 @@ import CA.Splitr.Models.Summary;
 
 @Repository
 public class TripRepository {
-    private Map<String, ArrayList<Expense>> trip;
-    private Map<String, Boolean> tripActive;
+    private static final Map<String, ArrayList<Expense>> trip = new HashMap<>();
+    private static final Map<String, Boolean> tripActive = new HashMap<>();
 
-    public TripRepository() {
-        super();
-        trip = new HashMap<>();
-        tripActive = new HashMap<>();
-    }
-
-    public Map<String, ArrayList<Expense>> addExpense(String label, Expense expense) {
+    public String addExpense(String label, Expense expense) {
+        // If it is a new label, add it to the Map
         if (!trip.containsKey(label)) {
             trip.put(label, new ArrayList<Expense>());
             tripActive.put(label, true);
         }
 
+        // If the label is Active, add the expense to the list
         if (tripActive.get(label).equals(true)) {
             trip.get(label).add(expense);
+            return label;
+        } else {
+            return null;
         }
-
-        return trip;
     }
 
-    public List<Expense> getExpenses(String label) {
-        return trip.get(label);
+    public ArrayList<Expense> getExpenses(String label) {
+        // If trip doesn't contain the key
+        if (!trip.containsKey(label)) {
+            return null;
+        } else {
+            var expenses = trip.get(label);
+            // If contains the key but no expenses
+            if (expenses.equals(null)) {
+                return new ArrayList<Expense>();
+            } else {
+                return expenses;
+            }
+        }
     }
 
     public void close(String label) {
