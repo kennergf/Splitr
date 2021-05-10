@@ -5,6 +5,12 @@ public class User {
     private String username;
     private String password;
 
+    public User(String username, String password) {
+        super();
+        setUsername(username);
+        setPassword(password);
+    }
+
     public String getUsername() {
         return username;
     }

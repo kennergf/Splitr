@@ -39,7 +39,6 @@ public class SplitrController {
         tripRepository.close(label);
     }
 
-    @CrossOrigin("*")
     @GetMapping("/{label}/summary")
 	public String getSummary(@PathVariable("label") String label) {
 		return label;

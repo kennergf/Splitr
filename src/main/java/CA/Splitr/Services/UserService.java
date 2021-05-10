@@ -19,4 +19,9 @@ public class UserService {
     public User readUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+
+    public void registerUser(String username, String password){
+        User user = new User(username, password);
+        userRepository.save(user);
+    }
 }

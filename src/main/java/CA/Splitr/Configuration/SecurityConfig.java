@@ -27,8 +27,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors()
             .and()
+                .antMatcher("user/register").authorizeRequests()
+            .and()
                 .authorizeRequests()
                     .anyRequest()
+                        //.authenticated()
                         .permitAll()
             .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()))
