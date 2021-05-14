@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import CA.Splitr.DTO.ExpenseDTO;
+import CA.Splitr.DTO.TripClosedDTO;
 import CA.Splitr.Models.Expense;
 import CA.Splitr.Models.Summary;
 import CA.Splitr.Repositories.TripRepository;
@@ -28,13 +29,13 @@ public class SplitrController {
             @RequestBody(required = true) ExpenseDTO expenseDTO) {
         // TODO validate
         float value = 0;
-        try{
+        try {
             value = Float.parseFloat(expenseDTO.getValue());
-        }catch(NullPointerException e){
+        } catch (NullPointerException e) {
             return new ResponseEntity<String>("No value provided!", HttpStatus.BAD_REQUEST);
-        }catch(NumberFormatException e){
+        } catch (NumberFormatException e) {
             return new ResponseEntity<String>("Value not valid!", HttpStatus.BAD_REQUEST);
-        }catch(Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         var result = tripRepository.addExpense(label, new Expense(0, value));
@@ -42,21 +43,24 @@ public class SplitrController {
         if (result.equals(null)) {
             return new ResponseEntity<String>("Label Closed", HttpStatus.LOCKED);
         } else {
-            return ResponseEntity.ok("Expense Added! "+token);
+            return ResponseEntity.ok("Expense Added! " + token);
         }
     }
 
     @GetMapping("/{label}")
     public ResponseEntity<ArrayList<Expense>> getExpenses(@PathVariable("label") String label) {
         var expenses = tripRepository.getExpenses(label);
-        
+
         return ResponseEntity.ok(expenses);
     }
 
     @PostMapping("/{label}/close")
-    public ResponseEntity<String> close(@PathVariable("label") String label) {
-        tripRepository.close(label);
-        return ResponseEntity.ok("Closed!");
+    public ResponseEntity<TripClosedDTO> close(@PathVariable("label") String label) {
+        if (!tripRepository.LabelExists(label)) {
+            return new ResponseEntity<TripClosedDTO>(new TripClosedDTO(label, "NOT FOUND"), HttpStatus.NOT_FOUND);
+        }
+
+        return ResponseEntity.ok(tripRepository.close(label));
     }
 
     @GetMapping("/{label}/summary")

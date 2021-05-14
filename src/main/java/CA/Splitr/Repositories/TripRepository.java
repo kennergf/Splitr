@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import CA.Splitr.DTO.TripClosedDTO;
 import CA.Splitr.Models.Expense;
 import CA.Splitr.Models.Summary;
 
@@ -45,9 +46,19 @@ public class TripRepository {
         }
     }
 
-    public void close(String label) {
+    public boolean LabelExists(String label){
+        return tripActive.containsKey(label);
+    }
+
+    public TripClosedDTO close(String label) {
         if (tripActive.containsKey(label)) {
-            tripActive.replace(label, false);
+            if(tripActive.replace(label, false)){
+                return new TripClosedDTO(label, "Closed!");
+            }else{
+                return new TripClosedDTO(label, "Already Closed!");
+            }
+        }else{
+            return new TripClosedDTO(label, "Not Found!");
         }
     }
 
