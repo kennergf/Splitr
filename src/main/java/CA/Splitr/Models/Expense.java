@@ -5,6 +5,12 @@ public class Expense {
     private long idUser;
     private float value;
 
+    public Expense(long idUser, float value) {
+        super();
+        setIdUser(idUser);
+        setValue(value);
+    }
+
     public float getValue() {
         return value;
     }

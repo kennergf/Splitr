@@ -2,6 +2,7 @@ package CA.Splitr.Controllers;
 
 import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import CA.Splitr.DTO.ExpenseDTO;
 import CA.Splitr.Models.Expense;
 import CA.Splitr.Models.Summary;
 import CA.Splitr.Repositories.TripRepository;
@@ -23,14 +25,24 @@ public class SplitrController {
     @PostMapping("/{label}/expense")
     public ResponseEntity<String> addExpense(@PathVariable("label") String label,
             @RequestHeader(name = "Authorization", required = true) String token,
-            @RequestBody(required = true) Expense expense) {
+            @RequestBody(required = true) ExpenseDTO expenseDTO) {
         // TODO validate
-        var result = tripRepository.addExpense(label, expense);
+        float value = 0;
+        try{
+            value = Float.parseFloat(expenseDTO.getValue());
+        }catch(NullPointerException e){
+            return new ResponseEntity<String>("No value provided!", HttpStatus.BAD_REQUEST);
+        }catch(NumberFormatException e){
+            return new ResponseEntity<String>("Value not valid!", HttpStatus.BAD_REQUEST);
+        }catch(Exception e){
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        var result = tripRepository.addExpense(label, new Expense(0, value));
 
         if (result.equals(null)) {
-            return ResponseEntity.ok("Label Closed!");
+            return new ResponseEntity<String>("Label Closed", HttpStatus.LOCKED);
         } else {
-            return ResponseEntity.ok("Added!");
+            return ResponseEntity.ok("Expense Added! "+token);
         }
     }
 
