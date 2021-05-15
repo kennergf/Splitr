@@ -4,11 +4,17 @@ public class User {
     private long id;
     private String username;
     private String password;
+    private String role;
 
-    public User(String username, String password) {
+    public User() {
+        super();
+    }
+
+    public User(String username, String password, String role) {
         super();
         setUsername(username);
         setPassword(password);
+        setRole(role);
     }
 
     public String getUsername() {
@@ -34,4 +40,13 @@ public class User {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
 }

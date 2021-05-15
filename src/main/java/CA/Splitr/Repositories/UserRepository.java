@@ -38,4 +38,8 @@ public class UserRepository {
             return true;
         }
     }
+
+    public boolean usernameExist(String username){
+        return users.containsKey(username);
+    }
 }

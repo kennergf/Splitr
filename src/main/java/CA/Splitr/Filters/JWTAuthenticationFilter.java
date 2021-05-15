@@ -36,23 +36,26 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(credentials.getUsername(),
                     credentials.getPassword(), new ArrayList<>()));
+
         } catch (IOException ex) {
-            throw new RuntimeException(ex);
+            throw new RuntimeException("KENNER "+ex);
         }
     }
 
     // REF https://www.baeldung.com/java-json-web-tokens-jjwt
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException{
-        String token = JWT.create()
-            .withSubject(((User) authentication.getPrincipal()).getUsername())
-            .withExpiresAt(new Date(System.currentTimeMillis()+AuthenticationConfigurationConstants.DURATION))
-            .sign(Algorithm.HMAC512(AuthenticationConfigurationConstants.SECRET));
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+            Authentication authentication) throws IOException, ServletException {
+        String token = JWT.create().withSubject(((org.springframework.security.core.userdetails.User) authentication.getPrincipal()).getUsername())
+                .withExpiresAt(new Date(System.currentTimeMillis() + AuthenticationConfigurationConstants.DURATION))
+                .sign(Algorithm.HMAC512(AuthenticationConfigurationConstants.SECRET));
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write("{\""+ AuthenticationConfigurationConstants.HEADER_STRING + "\":\"" + AuthenticationConfigurationConstants.TOKEN_PREFIX + token +"\"}");
+        response.getWriter().write("{\"" + AuthenticationConfigurationConstants.HEADER_STRING + "\":\""
+                + AuthenticationConfigurationConstants.TOKEN_PREFIX + token + "\"}");
 
-        response.addHeader(AuthenticationConfigurationConstants.HEADER_STRING, AuthenticationConfigurationConstants.TOKEN_PREFIX + token);
+        response.addHeader(AuthenticationConfigurationConstants.HEADER_STRING,
+                AuthenticationConfigurationConstants.TOKEN_PREFIX + token);
     }
 }
