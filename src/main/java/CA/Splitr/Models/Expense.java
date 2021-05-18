@@ -1,34 +1,25 @@
 package CA.Splitr.Models;
 
 public class Expense {
-    private long id;
-    private long idUser;
+    private String username;
     private float value;
 
-    public Expense(long idUser, float value) {
+    public Expense(String username, float value) {
         super();
-        setIdUser(idUser);
+        setUsername(username);
         setValue(value);
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public float getValue() {
         return value;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(long idUser) {
-        this.idUser = idUser;
     }
 
     public void setValue(float value) {

@@ -38,7 +38,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                     credentials.getPassword(), new ArrayList<>()));
 
         } catch (IOException ex) {
-            throw new RuntimeException("KENNER "+ex);
+            throw new RuntimeException(ex);
         }
     }
 
