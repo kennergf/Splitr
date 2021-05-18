@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,10 +39,7 @@ public class SplitrController {
 
         // Token Validation
         var decoded = JWT.decode(token.replace(AuthenticationConfigurationConstants.TOKEN_PREFIX, ""));
-        // DecodedJWT decoded =
-        // JWT.require(Algorithm.HMAC512(AuthenticationConfigurationConstants.SECRET)).build().verify(token);
         String username = decoded.getSubject();
-
         if (new Date(System.currentTimeMillis()).after(decoded.getExpiresAt())) {
             throw new RuntimeException("Token expired! Login again to get a valid token!");
         }
@@ -76,14 +70,36 @@ public class SplitrController {
     }
 
     @GetMapping("/{label}")
-    public ResponseEntity<ArrayList<Expense>> getExpenses(@PathVariable("label") String label) {
+    public ResponseEntity<ArrayList<Expense>> getExpenses(@PathVariable("label") String label,
+            @RequestHeader(name = "Authorization", required = true) String token) {
+        // Token Validation
+        var decoded = JWT.decode(token.replace(AuthenticationConfigurationConstants.TOKEN_PREFIX, ""));
+        String username = decoded.getSubject();
+        if (new Date(System.currentTimeMillis()).after(decoded.getExpiresAt())) {
+            throw new RuntimeException("Token expired! Login again to get a valid token!");
+        }
+        if (!userRepository.usernameExist(username)) {
+            throw new UsernameNotFoundException("Username not found!");
+        }
+
         var expenses = tripRepository.getExpenses(label);
 
         return ResponseEntity.ok(expenses);
     }
 
     @PostMapping("/{label}/close")
-    public ResponseEntity<TripClosedDTO> close(@PathVariable("label") String label) {
+    public ResponseEntity<TripClosedDTO> close(@PathVariable("label") String label,
+            @RequestHeader(name = "Authorization", required = true) String token) {
+        // Token Validation
+        var decoded = JWT.decode(token.replace(AuthenticationConfigurationConstants.TOKEN_PREFIX, ""));
+        String username = decoded.getSubject();
+        if (new Date(System.currentTimeMillis()).after(decoded.getExpiresAt())) {
+            throw new RuntimeException("Token expired! Login again to get a valid token!");
+        }
+        if (!userRepository.usernameExist(username)) {
+            throw new UsernameNotFoundException("Username not found!");
+        }
+
         if (!tripRepository.LabelExists(label)) {
             return new ResponseEntity<TripClosedDTO>(new TripClosedDTO(label, "NOT FOUND"), HttpStatus.NOT_FOUND);
         }
@@ -92,7 +108,18 @@ public class SplitrController {
     }
 
     @GetMapping("/{label}/summary")
-    public ResponseEntity<Summary> getSummary(@PathVariable("label") String label) {
+    public ResponseEntity<Summary> getSummary(@PathVariable("label") String label,
+            @RequestHeader(name = "Authorization", required = true) String token) {
+        // Token Validation
+        var decoded = JWT.decode(token.replace(AuthenticationConfigurationConstants.TOKEN_PREFIX, ""));
+        String username = decoded.getSubject();
+        if (new Date(System.currentTimeMillis()).after(decoded.getExpiresAt())) {
+            throw new RuntimeException("Token expired! Login again to get a valid token!");
+        }
+        if (!userRepository.usernameExist(username)) {
+            throw new UsernameNotFoundException("Username not found!");
+        }
+
         return ResponseEntity.ok(tripRepository.getSummary(label));
     }
 }
