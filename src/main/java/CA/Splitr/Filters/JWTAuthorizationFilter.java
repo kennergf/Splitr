@@ -22,6 +22,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 
 import CA.Splitr.Configuration.AuthenticationConfigurationConstants;
 
+// REF https://www.techgeeknext.com/spring/spring-boot-security-token-authentication-jwt
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
     public JWTAuthorizationFilter(AuthenticationManager authenticationManager) {
@@ -41,6 +42,8 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         chain.doFilter(request, response);
     }
 
+    // REF https://stackoverflow.com/questions/44640260/auth0-jwt-with-java
+    // REF https://www.baeldung.com/java-json-web-tokens-jjwt
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
         String token = request.getHeader(AuthenticationConfigurationConstants.HEADER_STRING);
         if (token != null) {

@@ -38,6 +38,7 @@ public class SplitrController {
             @RequestBody(required = true) ExpenseDTO expenseDTO) {
 
         // Token Validation
+        // REF https://www.baeldung.com/java-json-web-tokens-jjwt
         var decoded = JWT.decode(token.replace(AuthenticationConfigurationConstants.TOKEN_PREFIX, ""));
         String username = decoded.getSubject();
         if (new Date(System.currentTimeMillis()).after(decoded.getExpiresAt())) {

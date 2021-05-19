@@ -22,6 +22,7 @@ import CA.Splitr.Configuration.AuthenticationConfigurationConstants;
 import CA.Splitr.Models.User;
 
 // REF https://javatodev.com/spring-boot-jwt-authentication/#d375a47b0c4f
+// REF https://www.techgeeknext.com/spring/spring-boot-security-token-authentication-jwt
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
 
@@ -29,6 +30,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         this.authenticationManager = authenticationManager;
     }
 
+    // REF https://www.baeldung.com/java-json-web-tokens-jjwt
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
         try {
@@ -42,11 +44,14 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }
     }
 
+    // REF https://stackoverflow.com/questions/44640260/auth0-jwt-with-java
     // REF https://www.baeldung.com/java-json-web-tokens-jjwt
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
             Authentication authentication) throws IOException, ServletException {
-        String token = JWT.create().withSubject(((org.springframework.security.core.userdetails.User) authentication.getPrincipal()).getUsername())
+        String token = JWT.create()
+                .withSubject(((org.springframework.security.core.userdetails.User) authentication.getPrincipal())
+                        .getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + AuthenticationConfigurationConstants.DURATION))
                 .sign(Algorithm.HMAC512(AuthenticationConfigurationConstants.SECRET));
 
