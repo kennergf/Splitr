@@ -15,6 +15,12 @@ public class TripRepository {
     private static final Map<String, ArrayList<Expense>> trip = new HashMap<>();
     private static final Map<String, Boolean> tripActive = new HashMap<>();
 
+    /**
+     * Add the expense labeled to the system
+     * @param label used to identify a group of expenses
+     * @param expense is the description of the profuct or service paid
+     * @return the label if added, or null if the label is inactive and could not be added
+     */
     public String addExpense(String label, Expense expense) {
         // If it is a new label, add it to the Map
         if (!trip.containsKey(label)) {
@@ -31,6 +37,11 @@ public class TripRepository {
         }
     }
 
+    /**
+     * Return a List of expenses if any found, or null if label des not exist
+     * @param label that identify a group of expenses
+     * @return
+     */
     public ArrayList<Expense> getExpenses(String label) {
         // If trip doesn't contain the key
         if (!trip.containsKey(label)) {
@@ -46,10 +57,20 @@ public class TripRepository {
         }
     }
 
+    /**
+     * Verify if the label exist
+     * @param label
+     * @return true or false
+     */
     public boolean LabelExists(String label){
         return tripActive.containsKey(label);
     }
 
+    /**
+     * Close the label for new expenses
+     * @param label
+     * @return an object with the label and the status message
+     */
     public TripClosedDTO close(String label) {
         if (tripActive.containsKey(label)) {
             if(tripActive.replace(label, false)){
@@ -62,6 +83,11 @@ public class TripRepository {
         }
     }
 
+    /**
+     * Get the summary for the label with information about the expenses and how it is split
+     * @param label
+     * @return The summary if found, or null if label does not exist
+     */
     public Summary getSummary(String label) {
         if (trip.containsKey(label)) {
             Summary summary = new Summary(label, tripActive.get(label), trip.get(label));

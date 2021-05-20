@@ -18,21 +18,30 @@ public class UserService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    public User readUserByUsername(String username) {
+    /**
+     * Get the user by Username
+     * 
+     * @param username
+     * @return User if found or null if not found
+     */
+    public User getByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
-    public void registerUser(String username, String password, String role){
-        User user = new User(username, password, role);
-        userRepository.save(user);
-    }
-
-    public void createUser(UserDTO userDTO){
-        if(userRepository.usernameExist(userDTO.getUsername())){
-            throw new RuntimeException("Username is been used! Choose a different username!");
+    /**
+     * Create a new user if the username is available
+     * 
+     * @param userDTO
+     * @return True if created, or False if it fails to create new user
+     */
+    public boolean create(UserDTO userDTO) {
+        if (userRepository.usernameExist(userDTO.getUsername())) {
+            throw new RuntimeException("Username is been used! Please choose a different username!");
         }
 
-        User user = new User(userDTO.getUsername(), bCryptPasswordEncoder.encode(userDTO.getPassword()), userDTO.getRole());
-        userRepository.save(user);
+        // Create new User with password encrypted
+        User user = new User(userDTO.getUsername(), bCryptPasswordEncoder.encode(userDTO.getPassword()),
+                userDTO.getRole());
+        return userRepository.save(user);
     }
 }

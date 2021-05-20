@@ -39,6 +39,11 @@ public class UserRepository {
         }
     }
 
+    /**
+     * Check if the username exist
+     * @param username
+     * @return true or false
+     */
     public boolean usernameExist(String username){
         return users.containsKey(username);
     }
