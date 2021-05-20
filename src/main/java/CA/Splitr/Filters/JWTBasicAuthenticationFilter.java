@@ -23,9 +23,9 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import CA.Splitr.Configuration.AuthenticationConfigurationConstants;
 
 // REF https://www.techgeeknext.com/spring/spring-boot-security-token-authentication-jwt
-public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
+public class JWTBasicAuthenticationFilter extends BasicAuthenticationFilter {
 
-    public JWTAuthorizationFilter(AuthenticationManager authenticationManager) {
+    public JWTBasicAuthenticationFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
     }
 
