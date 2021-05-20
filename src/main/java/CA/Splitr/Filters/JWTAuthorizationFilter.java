@@ -29,6 +29,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         super(authenticationManager);
     }
 
+    // If necessary, do the filter on the credentials received,
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
@@ -37,14 +38,15 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
             chain.doFilter(request, response);
             return;
         }
-        UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
+        UsernamePasswordAuthenticationToken authentication = getAuthenticationToken(request);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(request, response);
     }
 
     // REF https://stackoverflow.com/questions/44640260/auth0-jwt-with-java
     // REF https://www.baeldung.com/java-json-web-tokens-jjwt
-    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
+    // Recover the information from the JWT to authenticate the user.
+    private UsernamePasswordAuthenticationToken getAuthenticationToken(HttpServletRequest request) {
         String token = request.getHeader(AuthenticationConfigurationConstants.HEADER_STRING);
         if (token != null) {
             // parse the token.

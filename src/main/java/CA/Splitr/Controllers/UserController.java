@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import CA.Splitr.Configuration.AuthenticationConfigurationConstants;
@@ -13,7 +12,6 @@ import CA.Splitr.DTO.UserDTO;
 import CA.Splitr.Services.UserService;
 
 @RestController
-@RequestMapping(value = "user")
 public class UserController {
 
     @Autowired

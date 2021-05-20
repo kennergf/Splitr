@@ -31,13 +31,14 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     // REF https://www.baeldung.com/java-json-web-tokens-jjwt
+    // Try to authenticate the user with the credentials received.
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
         try {
-            User credentials = new ObjectMapper().readValue(request.getInputStream(), User.class);
+            User user = new ObjectMapper().readValue(request.getInputStream(), User.class);
 
-            return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(credentials.getUsername(),
-                    credentials.getPassword(), new ArrayList<>()));
+            return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(),
+                    user.getPassword(), new ArrayList<>()));
 
         } catch (IOException ex) {
             throw new RuntimeException(ex);
@@ -46,6 +47,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     // REF https://stackoverflow.com/questions/44640260/auth0-jwt-with-java
     // REF https://www.baeldung.com/java-json-web-tokens-jjwt
+    // If authenticate successfuly, create a JWT for the user and return it as response
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
             Authentication authentication) throws IOException, ServletException {
