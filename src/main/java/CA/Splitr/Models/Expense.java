@@ -1,6 +1,7 @@
 package CA.Splitr.Models;
 
 public class Expense {
+    private long id;
     private String username;
     private float value;
 
@@ -8,6 +9,14 @@ public class Expense {
         super();
         setUsername(username);
         setValue(value);
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getUsername() {

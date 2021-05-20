@@ -14,6 +14,7 @@ import CA.Splitr.Models.Summary;
 public class TripRepository {
     private static final Map<String, ArrayList<Expense>> trip = new HashMap<>();
     private static final Map<String, Boolean> tripActive = new HashMap<>();
+    private static long expenseIndex = 0;
 
     /**
      * Add the expense labeled to the system
@@ -30,6 +31,7 @@ public class TripRepository {
 
         // If the label is Active, add the expense to the list
         if (tripActive.get(label).equals(true)) {
+            expense.setId(expenseIndex++);
             trip.get(label).add(expense);
             return label;
         } else {
@@ -38,14 +40,32 @@ public class TripRepository {
     }
 
     /**
-     * Return a List of expenses if any found, or null if label des not exist
+     * Remove the expense based on id and label
+     * @param label
+     * @param expenseId
+     * @return expenseId if removed, or -1 if not found
+     */
+    // REF https://www.tutorialspoint.com/use-iterator-to-remove-an-element-from-a-collection-in-java
+    public long removeExpense(String label, long expenseId){
+        var iteractor = trip.get(label).iterator();
+        while(iteractor.hasNext()){
+            if(iteractor.next().getId() == expenseId){
+                iteractor.remove();
+                return expenseId;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * Return a List of expenses if any found, or null if label does not exist
      * @param label that identify a group of expenses
      * @return
      */
     public ArrayList<Expense> getExpenses(String label) {
         // If trip doesn't contain the key
         if (!trip.containsKey(label)) {
-            return null;
+            return new ArrayList<Expense>();
         } else {
             var expenses = trip.get(label);
             // If contains the key but no expenses
