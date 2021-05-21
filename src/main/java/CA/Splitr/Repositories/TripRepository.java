@@ -2,6 +2,7 @@ package CA.Splitr.Repositories;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
@@ -47,7 +48,7 @@ public class TripRepository {
      */
     // REF https://www.tutorialspoint.com/use-iterator-to-remove-an-element-from-a-collection-in-java
     public long removeExpense(String label, long expenseId){
-        var iteractor = trip.get(label).iterator();
+        Iterator<Expense> iteractor = trip.get(label).iterator();
         while(iteractor.hasNext()){
             if(iteractor.next().getId() == expenseId){
                 iteractor.remove();
@@ -67,7 +68,7 @@ public class TripRepository {
         if (!trip.containsKey(label)) {
             return new ArrayList<Expense>();
         } else {
-            var expenses = trip.get(label);
+            ArrayList<Expense> expenses = trip.get(label);
             // If contains the key but no expenses
             if (expenses.equals(null)) {
                 return new ArrayList<Expense>();

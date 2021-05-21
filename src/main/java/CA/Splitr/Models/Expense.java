@@ -3,12 +3,22 @@ package CA.Splitr.Models;
 public class Expense {
     private long id;
     private String username;
+    private String description;
     private float value;
 
-    public Expense(String username, float value) {
+    public Expense(String username, String description, float value) {
         super();
         setUsername(username);
+        setDescription(description);
         setValue(value);
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public long getId() {

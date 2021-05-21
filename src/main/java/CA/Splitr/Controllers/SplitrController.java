@@ -6,6 +6,8 @@ import java.util.Date;
 import javax.websocket.server.PathParam;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +44,7 @@ public class SplitrController {
 
         // Token Validation
         // REF https://www.baeldung.com/java-json-web-tokens-jjwt
-        var decoded = JWT.decode(token.replace(AuthenticationConfigurationConstants.TOKEN_PREFIX, ""));
+        DecodedJWT decoded = JWT.decode(token.replace(AuthenticationConfigurationConstants.TOKEN_PREFIX, ""));
         String username = decoded.getSubject();
         if (new Date(System.currentTimeMillis()).after(decoded.getExpiresAt())) {
             throw new RuntimeException("Token expired! Login again to get a valid token!");
@@ -53,8 +55,10 @@ public class SplitrController {
 
         // Validate the value of expense provided
         float value = 0;
+        String description = "";
         try {
             value = Float.parseFloat(expenseDTO.getValue());
+            description = expenseDTO.getDescription();
         } catch (NullPointerException e) {
             return new ResponseEntity<String>("No value provided!", HttpStatus.BAD_REQUEST);
         } catch (NumberFormatException e) {
@@ -64,7 +68,7 @@ public class SplitrController {
         }
 
         // Try to add new Expense to the repository
-        var result = tripRepository.addExpense(label, new Expense(username, value));
+        String result = tripRepository.addExpense(label, new Expense(username, description, value));
 
         if (result.equals(null)) {
             return new ResponseEntity<String>("Label Closed", HttpStatus.LOCKED);
@@ -78,7 +82,7 @@ public class SplitrController {
             @RequestHeader(name = "Authorization", required = true) String token,
             @PathParam("expenseId") String expenseId) {
         // Token Validation
-        var decoded = JWT.decode(token.replace(AuthenticationConfigurationConstants.TOKEN_PREFIX, ""));
+        DecodedJWT decoded = JWT.decode(token.replace(AuthenticationConfigurationConstants.TOKEN_PREFIX, ""));
         String username = decoded.getSubject();
         if (new Date(System.currentTimeMillis()).after(decoded.getExpiresAt())) {
             throw new RuntimeException("Token expired! Login again to get a valid token!");
@@ -99,7 +103,7 @@ public class SplitrController {
     public ResponseEntity<ArrayList<Expense>> getExpenses(@PathVariable("label") String label,
             @RequestHeader(name = "Authorization", required = true) String token) {
         // Token Validation
-        var decoded = JWT.decode(token.replace(AuthenticationConfigurationConstants.TOKEN_PREFIX, ""));
+        DecodedJWT decoded = JWT.decode(token.replace(AuthenticationConfigurationConstants.TOKEN_PREFIX, ""));
         String username = decoded.getSubject();
         if (new Date(System.currentTimeMillis()).after(decoded.getExpiresAt())) {
             throw new RuntimeException("Token expired! Login again to get a valid token!");
@@ -108,7 +112,7 @@ public class SplitrController {
             throw new UsernameNotFoundException("Username not found!");
         }
 
-        var expenses = tripRepository.getExpenses(label);
+        ArrayList<Expense> expenses = tripRepository.getExpenses(label);
 
         return ResponseEntity.ok(expenses);
     }
@@ -117,7 +121,7 @@ public class SplitrController {
     public ResponseEntity<TripClosedDTO> close(@PathVariable("label") String label,
             @RequestHeader(name = "Authorization", required = true) String token) {
         // Token Validation
-        var decoded = JWT.decode(token.replace(AuthenticationConfigurationConstants.TOKEN_PREFIX, ""));
+        DecodedJWT decoded = JWT.decode(token.replace(AuthenticationConfigurationConstants.TOKEN_PREFIX, ""));
         String username = decoded.getSubject();
         if (new Date(System.currentTimeMillis()).after(decoded.getExpiresAt())) {
             throw new RuntimeException("Token expired! Login again to get a valid token!");
@@ -137,7 +141,7 @@ public class SplitrController {
     public ResponseEntity<Summary> getSummary(@PathVariable("label") String label,
             @RequestHeader(name = "Authorization", required = true) String token) {
         // Token Validation
-        var decoded = JWT.decode(token.replace(AuthenticationConfigurationConstants.TOKEN_PREFIX, ""));
+        DecodedJWT decoded = JWT.decode(token.replace(AuthenticationConfigurationConstants.TOKEN_PREFIX, ""));
         String username = decoded.getSubject();
         if (new Date(System.currentTimeMillis()).after(decoded.getExpiresAt())) {
             throw new RuntimeException("Token expired! Login again to get a valid token!");
